@@ -41,11 +41,12 @@ const subscribeEcho = () => {
             messages.value.push(e.message)
             scrollToBottom()
         })
-        .listen('.user.typing', () => {
+        .listen('.user.typing', (e) => {
+            console.log('typing event:', e)
+            if (e.userId === props.authUser.id) return
             typingUser.value = 'Sedang mengetik...'
             setTimeout(() => { typingUser.value = null }, 2000)
-        })
-}
+        })}
 
 watch(() => props.conversation?.id, (newId) => {
     if (newId) {
@@ -79,7 +80,7 @@ onUnmounted(() => {
             <MessageBubble
                 :message="message"
                 :is-mine="message.sender_id === authUser.id"
-                :is-group="conversation.is_group"
+                :is-group="conversation.type === 'group'"
             />
         </div>
 
