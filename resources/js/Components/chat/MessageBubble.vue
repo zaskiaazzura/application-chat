@@ -4,6 +4,7 @@ import { computed } from 'vue'
 const props = defineProps({
     message: Object,
     isMine: Boolean,
+    isGroup: Boolean,
 })
 
 const time = computed(() => {
@@ -12,6 +13,22 @@ const time = computed(() => {
         hour: '2-digit',
         minute: '2-digit',
     })
+})
+
+// Warna nama pengirim berdasarkan id, biar tiap orang beda warna
+const senderColor = computed(() => {
+    const colors = [
+        'text-pink-400',
+        'text-blue-400',
+        'text-green-400',
+        'text-yellow-400',
+        'text-purple-400',
+        'text-orange-400',
+        'text-cyan-400',
+        'text-rose-400',
+    ]
+    const id = props.message.sender_id ?? 0
+    return colors[id % colors.length]
 })
 </script>
 
@@ -22,6 +39,15 @@ const time = computed(() => {
             ? 'bg-indigo-600 text-white rounded-br-sm'
             : 'bg-gray-800 text-gray-100 rounded-bl-sm'"
     >
+        <!-- Nama pengirim — hanya tampil di grup, dan bukan milik kita sendiri -->
+        <p
+            v-if="isGroup && !isMine && message.sender"
+            class="text-xs font-semibold mb-1"
+            :class="senderColor"
+        >
+            {{ message.sender.name }}
+        </p>
+
         <!-- Reply quote -->
         <div
             v-if="message.replyTo"

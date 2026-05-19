@@ -79,6 +79,7 @@ onUnmounted(() => {
             <MessageBubble
                 :message="message"
                 :is-mine="message.sender_id === authUser.id"
+                :is-group="conversation.is_group"
             />
         </div>
 
